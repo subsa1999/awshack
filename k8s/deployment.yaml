@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-consumer
+  namespace: default
+  labels:
+    app: kafka-consumer
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: kafka-consumer
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: kafka-consumer
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: kafka-consumer
+          image: docker.io/library/simple-kafka-consumer:v1
+          imagePullPolicy: Never
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: >-
+                -Xms128m
+                -Xmx256m
+                -XX:+UseG1GC
+                -XX:+ExitOnOutOfMemoryError
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "ip-172-31-7-94.ap-south-1.compute.internal:9092"
+            - name: KAFKA_TOPIC
+              value: "hottopic"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
