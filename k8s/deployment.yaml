@@ -21,7 +21,7 @@ spec:
       terminationGracePeriodSeconds: 60
       containers:
         - name: kafka-consumer
-          image: docker.io/library/simple-kafka-consumer:v1
+          image: docker.io/library/awshack:v1
           imagePullPolicy: Never
           env:
             - name: JAVA_TOOL_OPTIONS
